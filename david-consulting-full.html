@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大衛哥小顧問 | David C. 談數據、數位與 AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Playfair+Display:wght@700;900&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --indigo-950: #0f0a2e;
+  --indigo-900: #1a1050;
+  --indigo-800: #251a72;
+  --indigo-700: #3730a3;
+  --indigo-600: #4f46e5;
+  --indigo-400: #818cf8;
+  --indigo-300: #a5b4fc;
+  --indigo-100: #e0e7ff;
+  --gold: #c9a84c;
+  --gold-light: #e8c97e;
+  --text-primary: #e8e4f4;
+  --text-muted: #9894bb;
+  --border: rgba(129,140,248,0.15);
+  --glow: rgba(79,70,229,0.3);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--indigo-950);color:var(--text-primary);font-family:'Noto Sans TC',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 15% 20%,rgba(55,48,163,.25) 0%,transparent 50%),radial-gradient(ellipse at 85% 70%,rgba(79,70,229,.15) 0%,transparent 50%);pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(129,140,248,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(129,140,248,.03) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 48px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,rgba(15,10,46,.97) 0%,transparent 100%);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);}
+.nav-brand{font-family:'Noto Serif TC',serif;font-weight:700;font-size:1.05rem;color:var(--indigo-300);letter-spacing:.05em;text-decoration:none;cursor:pointer;}
+.nav-brand span{color:var(--gold);}
+.nav-links{display:flex;gap:28px;list-style:none;}
+.nav-links a{color:var(--text-muted);text-decoration:none;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;transition:color .3s;font-weight:400;}
+.nav-links a:hover{color:var(--indigo-300);}
+
+/* HERO */
+.hero{position:relative;z-index:1;min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:120px 48px 80px;max-width:1200px;margin:0 auto;gap:64px;}
+.hero-text{animation:fadeUp .9s ease both;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(79,70,229,.15);border:1px solid rgba(129,140,248,.3);border-radius:100px;padding:6px 16px;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--indigo-300);margin-bottom:28px;font-family:'IBM Plex Mono',monospace;}
+.hero-badge::before{content:'◆';color:var(--gold);font-size:.5rem;}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(3rem,5vw,5rem);font-weight:900;line-height:1.05;margin-bottom:12px;background:linear-gradient(135deg,#e8e4f4 0%,#a5b4fc 60%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-subtitle{font-family:'Noto Serif TC',serif;font-size:1.4rem;color:var(--indigo-400);margin-bottom:24px;font-weight:400;}
+.hero-desc{font-size:.95rem;line-height:1.9;color:var(--text-muted);max-width:480px;margin-bottom:40px;}
+.hero-cta{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--indigo-700),var(--indigo-600));color:white;text-decoration:none;padding:14px 32px;border-radius:4px;font-size:.88rem;letter-spacing:.05em;font-weight:500;transition:all .3s;box-shadow:0 0 30px var(--glow);cursor:pointer;border:none;font-family:'Noto Sans TC',sans-serif;}
+.hero-cta:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(79,70,229,.5);}
+.hero-visual{animation:fadeUp .9s ease .2s both;display:flex;justify-content:center;align-items:center;}
+.profile-card{position:relative;width:340px;height:400px;background:linear-gradient(145deg,rgba(37,26,114,.6),rgba(26,16,80,.8));border:1px solid var(--border);border-radius:16px;padding:40px 36px;backdrop-filter:blur(20px);box-shadow:0 0 0 1px rgba(129,140,248,.1),0 32px 64px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.05);display:flex;flex-direction:column;gap:20px;}
+.profile-card::before{content:'';position:absolute;top:-1px;left:40px;right:40px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);border-radius:100%;}
+.profile-icon{width:64px;height:64px;background:linear-gradient(135deg,var(--indigo-700),var(--indigo-600));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;box-shadow:0 0 20px var(--glow);}
+.profile-name{font-family:'Noto Serif TC',serif;font-size:1.4rem;font-weight:700;}
+.profile-role{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-top:4px;}
+.profile-divider{height:1px;background:var(--border);}
+.profile-stats{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.stat-item{background:rgba(79,70,229,.1);border-radius:8px;padding:14px;border:1px solid var(--border);}
+.stat-number{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--indigo-300);font-weight:700;}
+.stat-label{font-size:.7rem;color:var(--text-muted);margin-top:2px;letter-spacing:.05em;}
+.profile-company{font-size:.82rem;color:var(--text-muted);line-height:1.6;border-left:2px solid var(--indigo-700);padding-left:12px;}
+.scroll-line{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text-muted);font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;animation:fadeUp 1s ease .8s both;}
+.scroll-line::after{content:'';width:1px;height:48px;background:linear-gradient(180deg,var(--indigo-600),transparent);animation:scrollPulse 2s ease-in-out infinite;}
+
+/* SECTION */
+section{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:80px 48px;}
+.section-divider{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 48px;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);}
+.section-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:12px;}
+.section-eyebrow::after{content:'';display:block;width:40px;height:1px;background:var(--gold);opacity:.5;}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,3vw,2.8rem);font-weight:700;line-height:1.2;margin-bottom:40px;}
+
+/* FILTER */
+.topics-filter{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:48px;}
+.filter-btn{padding:8px 20px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;font-size:.82rem;font-family:'Noto Sans TC',sans-serif;transition:all .25s;letter-spacing:.03em;}
+.filter-btn:hover,.filter-btn.active{background:var(--indigo-700);border-color:var(--indigo-600);color:white;box-shadow:0 0 20px rgba(79,70,229,.3);}
+.filter-btn.active{background:linear-gradient(135deg,var(--indigo-700),var(--indigo-600));}
+
+/* ARTICLES GRID */
+.articles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:24px;}
+.article-card{background:linear-gradient(145deg,rgba(37,26,114,.3),rgba(26,16,80,.5));border:1px solid var(--border);border-radius:12px;padding:28px;text-decoration:none;display:flex;flex-direction:column;gap:16px;transition:all .3s;cursor:pointer;position:relative;overflow:hidden;animation:fadeUp .5s ease both;}
+.article-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(129,140,248,.3),transparent);}
+.article-card:hover{border-color:rgba(129,140,248,.3);background:linear-gradient(145deg,rgba(55,48,163,.4),rgba(37,26,114,.6));transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,.3),0 0 20px rgba(79,70,229,.15);}
+.card-tags{display:flex;flex-wrap:wrap;gap:8px;}
+.tag{font-family:'IBM Plex Mono',monospace;font-size:.65rem;padding:3px 10px;border-radius:100px;letter-spacing:.05em;text-transform:uppercase;font-weight:500;}
+.tag-gen-ai{background:rgba(79,70,229,.2);color:var(--indigo-300);border:1px solid rgba(129,140,248,.2);}
+.tag-data{background:rgba(201,168,76,.15);color:var(--gold-light);border:1px solid rgba(201,168,76,.2);}
+.tag-digital{background:rgba(16,185,129,.1);color:#6ee7b7;border:1px solid rgba(16,185,129,.2);}
+.tag-wealth{background:rgba(236,72,153,.1);color:#f9a8d4;border:1px solid rgba(236,72,153,.2);}
+.tag-private{background:rgba(245,158,11,.1);color:#fcd34d;border:1px solid rgba(245,158,11,.2);}
+.card-series{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--indigo-400);letter-spacing:.05em;}
+.card-title{font-family:'Noto Serif TC',serif;font-size:1rem;font-weight:600;color:var(--text-primary);line-height:1.6;flex-grow:1;}
+.card-footer{display:flex;align-items:center;justify-content:space-between;padding-top:16px;border-top:1px solid var(--border);}
+.card-date{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--text-muted);}
+.card-arrow{width:32px;height:32px;border-radius:50%;background:rgba(79,70,229,.2);display:flex;align-items:center;justify-content:center;color:var(--indigo-400);font-size:.9rem;transition:all .25s;}
+.article-card:hover .card-arrow{background:var(--indigo-600);color:white;transform:translateX(3px);}
+.article-card.hidden{display:none;}
+.no-results{grid-column:1/-1;text-align:center;padding:64px;color:var(--text-muted);font-family:'IBM Plex Mono',monospace;font-size:.85rem;display:none;}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;}
+.about-text p{font-size:.95rem;line-height:1.9;color:var(--text-muted);margin-bottom:20px;}
+.about-text strong{color:var(--indigo-300);font-weight:500;}
+.expertise-list{display:flex;flex-direction:column;gap:16px;}
+.expertise-item{display:flex;align-items:flex-start;gap:16px;padding:20px;background:rgba(37,26,114,.2);border:1px solid var(--border);border-radius:10px;transition:all .25s;}
+.expertise-item:hover{border-color:rgba(129,140,248,.25);background:rgba(37,26,114,.35);}
+.expertise-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--indigo-800),var(--indigo-700));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;border:1px solid var(--border);}
+.expertise-name{font-family:'Noto Serif TC',serif;font-size:.95rem;font-weight:600;color:var(--text-primary);margin-bottom:4px;}
+.expertise-desc{font-size:.8rem;color:var(--text-muted);line-height:1.6;}
+
+/* FOOTER */
+footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:48px;max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
+.footer-brand{font-family:'Noto Serif TC',serif;font-size:1rem;color:var(--indigo-300);font-weight:700;}
+.footer-links{display:flex;gap:24px;}
+.footer-links a{color:var(--text-muted);text-decoration:none;font-size:.82rem;transition:color .25s;cursor:pointer;}
+.footer-links a:hover{color:var(--indigo-300);}
+.footer-credit{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--text-muted);opacity:.5;}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(10,6,28,.85);backdrop-filter:blur(12px);display:none;align-items:flex-start;justify-content:center;padding:40px 24px;overflow-y:auto;}
+.modal-overlay.open{display:flex;}
+.modal{background:linear-gradient(145deg,rgba(26,16,80,.97),rgba(15,10,46,.99));border:1px solid rgba(129,140,248,.2);border-radius:20px;max-width:860px;width:100%;padding:0;position:relative;box-shadow:0 40px 80px rgba(0,0,0,.6),0 0 0 1px rgba(129,140,248,.1);animation:modalIn .3s ease both;margin:auto;}
+.modal-header{padding:40px 48px 28px;border-bottom:1px solid var(--border);position:sticky;top:0;background:linear-gradient(180deg,rgba(26,16,80,.99) 80%,transparent);border-radius:20px 20px 0 0;z-index:10;}
+.modal-series{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--indigo-400);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;}
+.modal-title{font-family:'Noto Serif TC',serif;font-size:1.6rem;font-weight:700;line-height:1.4;color:var(--text-primary);}
+.modal-meta{display:flex;align-items:center;gap:16px;margin-top:16px;flex-wrap:wrap;}
+.modal-date{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--text-muted);}
+.modal-close{position:absolute;top:24px;right:24px;width:40px;height:40px;border-radius:50%;background:rgba(79,70,229,.15);border:1px solid var(--border);color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;transition:all .25s;}
+.modal-close:hover{background:rgba(79,70,229,.3);color:white;}
+.modal-body{padding:40px 48px 48px;line-height:1.9;color:var(--text-muted);font-size:.95rem;}
+.modal-body h3{font-family:'Noto Serif TC',serif;font-size:1.1rem;color:var(--text-primary);margin:28px 0 12px;font-weight:600;}
+.modal-body p{margin-bottom:16px;}
+.modal-body strong{color:var(--indigo-300);font-weight:500;}
+.modal-body .highlight-box{background:rgba(79,70,229,.08);border:1px solid rgba(129,140,248,.15);border-left:3px solid var(--indigo-600);border-radius:4px;padding:16px 20px;margin:20px 0;font-size:.92rem;}
+.modal-body .numbered-item{display:flex;gap:14px;margin-bottom:16px;}
+.modal-body .num-badge{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--indigo-700),var(--indigo-600));display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:white;flex-shrink:0;margin-top:2px;}
+.modal-body .img-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0;}
+.modal-body .img-grid img{width:100%;border-radius:8px;border:1px solid var(--border);}
+.modal-body img{max-width:100%;border-radius:8px;margin:16px 0;border:1px solid var(--border);}
+.modal-body .img-caption{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--text-muted);text-align:center;margin-top:-8px;margin-bottom:16px;}
+.modal-footer{padding:24px 48px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.modal-linkedin{display:inline-flex;align-items:center;gap:8px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.25);border-radius:6px;padding:8px 16px;font-size:.78rem;color:var(--gold-light);text-decoration:none;font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;transition:all .25s;}
+.modal-linkedin:hover{background:rgba(201,168,76,.2);}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+@keyframes modalIn{from{opacity:0;transform:translateY(20px) scale(.98);}to{opacity:1;transform:translateY(0) scale(1);}}
+@keyframes scrollPulse{0%,100%{opacity:.3;}50%{opacity:1;}}
+.article-card:nth-child(1){animation-delay:.05s;}.article-card:nth-child(2){animation-delay:.1s;}.article-card:nth-child(3){animation-delay:.15s;}.article-card:nth-child(4){animation-delay:.2s;}.article-card:nth-child(5){animation-delay:.25s;}.article-card:nth-child(6){animation-delay:.3s;}.article-card:nth-child(7){animation-delay:.35s;}.article-card:nth-child(8){animation-delay:.4s;}.article-card:nth-child(9){animation-delay:.45s;}.article-card:nth-child(10){animation-delay:.5s;}
+
+@media(max-width:768px){nav{padding:16px 24px;}.nav-links{display:none;}.hero{grid-template-columns:1fr;padding:100px 24px 80px;}.hero-visual{display:none;}section{padding:60px 24px;}.about-grid{grid-template-columns:1fr;gap:40px;}footer{flex-direction:column;gap:24px;text-align:center;padding:40px 24px;}.articles-grid{grid-template-columns:1fr;}.modal-header{padding:32px 24px 20px;}.modal-body{padding:28px 24px 36px;}.modal-footer{padding:20px 24px;}.modal-body .img-grid{grid-template-columns:1fr;}.modal{border-radius:16px;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-brand" onclick="scrollToTop()">大衛哥<span>小顧問</span></span>
+  <ul class="nav-links">
+    <li><a href="#insights" onclick="smoothNav('#insights')">觀點文章</a></li>
+    <li><a href="#about" onclick="smoothNav('#about')">關於大衛哥</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div style="position:relative;z-index:1;">
+  <div class="hero">
+    <div class="hero-text">
+      <div class="hero-badge">MBB 等級 管理顧問</div>
+      <h1 class="hero-title">大衛哥<br>小顧問</h1>
+      <p class="hero-subtitle">談數據、數位與 AI</p>
+      <p class="hero-desc">專注於金融業數位轉型、AI 治理、數據治理與永續發展 ESG，以實戰顧問視角深度解析企業面臨的數位挑戰與機遇。</p>
+      <button class="hero-cta" onclick="smoothNav('#insights')">探索觀點文章 →</button>
+    </div>
+    <div class="hero-visual">
+      <div class="profile-card">
+        <div class="profile-icon">🧠</div>
+        <div>
+          <div class="profile-name">David C.</div>
+          <div class="profile-role">Associate Partner</div>
+        </div>
+        <div class="profile-divider"></div>
+        <div class="profile-stats">
+          <div class="stat-item"><div class="stat-number">25+</div><div class="stat-label">年金融顧問經驗</div></div>
+          <div class="stat-item"><div class="stat-number">10</div><div class="stat-label">篇深度文章</div></div>
+        </div>
+        <div class="profile-company">星普思 Synpulse Taiwan<br>專精金融業管理顧問</div>
+      </div>
+    </div>
+    <div class="scroll-line">Scroll</div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- INSIGHTS -->
+<section id="insights">
+  <div class="section-eyebrow">Knowledge Hub</div>
+  <h2 class="section-title">觀點文章</h2>
+  <div class="topics-filter">
+    <button class="filter-btn active" onclick="filterArticles('all',this)">全部主題</button>
+    <button class="filter-btn" onclick="filterArticles('DataGovernance',this)">📊 數據治理</button>
+    <button class="filter-btn" onclick="filterArticles('Gen AI',this)">🤖 生成式 AI</button>
+    <button class="filter-btn" onclick="filterArticles('Wealth Management',this)">💼 財富管理</button>
+    <button class="filter-btn" onclick="filterArticles('Private Banking',this)">🏛 私人銀行</button>
+    <button class="filter-btn" onclick="filterArticles('Digital Transformation',this)">⚡ 數位轉型</button>
+  </div>
+  <div class="articles-grid" id="articlesGrid">
+
+    <div class="article-card" data-tags="DataGovernance,Gen AI,Digital Transformation" data-id="dg1" onclick="openArticle('dg1')">
+      <div class="card-tags"><span class="tag tag-data">數據治理</span><span class="tag tag-gen-ai">Gen AI</span></div>
+      <div class="card-series"># 數據治理系列 — 01</div>
+      <div class="card-title">Gen AI 如何提昇金融業的數據治理？</div>
+      <div class="card-footer"><span class="card-date">2024-07</span><div class="card-arrow">→</div></div>
+    </div>
+
+    <div class="article-card" data-tags="DataGovernance,Gen AI,Digital Transformation" data-id="dg2" onclick="openArticle('dg2')">
+      <div class="card-tags"><span class="tag tag-data">數據治理</span><span class="tag tag-gen-ai">Gen AI</span></div>
+      <div class="card-series"># 數據治理系列 — 02</div>
+      <div class="card-title">數據治理常見的迷思</div>
+      <div class="card-footer"><span class="card-date">2024-07</span><div class="card-arrow">→</div></div>
+    </div>
+
+    <div class="article-card" data-tags="DataGovernance,Gen AI,Digital Transformation" data-id="dg3" onclick="openArticle('dg3')">
+      <div class="card-tags"><span class="tag tag-data">數據治理</span><span class="tag tag-gen-ai">Gen AI</span></div>
+      <div class="card-series"># 數據治理系列 — 03</div>
+      <div class="card-title">數據治理常見的痛點</div>
+      <div class="card-footer"><span class="card-date">2024-08</span><div class="card-arrow">→</div></div>
+    </div>
+
+    <div class="article-card" data-tags="DataGovernance,Gen AI,Digital Transformation" data-id="dg4" onclick="openArticle('dg4')">
+      <div class="card-tags"><span class="tag tag-data">數據治理</span><span class="tag tag-digital">數位轉型</span></div>
+      <div class="card-series"># 數據治理系列 — 04</div>
+      <div class="card-title">資料策略</div>
+      <div class="card-footer"><span class="card-date">2025-01</span><div class="card-arrow">→</div></div>
+    </div>
+
+    <div class="article-card" data-tags="DataGovernance,Gen AI,Digital Transformation" data-id="dg5" onclick="openArticle('dg5')">
+      <div class="card-tags"><span class="tag tag-data">數據治理</span></div>
+      <div class="card-series"># 數據治理系列 — 05</div>
+      <div class="card-title">黃金規則</div>
+      <div class="card-footer"><span class="card-date">2025-01</span><div class="card-arrow">→</div></div>
+    </div>
+
+    <div class="article-card" data-tags="DataGovernance,Gen AI,Digital Transformation" data-id="dg6" onclick="openArticle('dg6')">
+      <div class="card-tags"><span class="tag tag-data">數據治理</span><span class="tag tag-digital">數位轉型</span></div>
+      <div class="card-series"># 數據治理系列 — 06</div>
+      <div class="card-title">數據治理如何落地？</div>
+      <div class="card-footer"><span class="card-date">2025-03</span><div class="card-arrow">→</div></div>
+    </div>
+
+    <div class="article-card" data-tags="DataGovernance,Digital Transformation" data-id="dg7" onclick="openArticle('dg7')">
+      <div class="card-tags"><span class="tag tag-data">數據治理</span><span class="tag tag-digital">數位轉型</span></div>
+      <div class="card-series"># 數據治理系列 — 07</div>
+      <div class="card-title">從 CDO，到 CAO，再到 "CDAIO"，會不會又是一種「頭銜通膨」？</div>
+      <div class="card-footer"><span class="card-date">2026-01</span><div class="card-arrow">→</div></div>
+    </div>
+
+    <div class="article-card" data-tags="Gen AI,Private Banking,Wealth Management" data-id="ai1" onclick="openArticle('ai1')">
+      <div class="card-tags"><span class="tag tag-gen-ai">Gen AI</span><span class="tag tag-wealth">財富管理</span><span class="tag tag-private">私人銀行</span></div>
+      <div class="card-series"># AI ✕ 私銀財管系列 — 01</div>
+      <div class="card-title">對於私銀財管而言，Gen AI 意味著什麼？</div>
+      <div class="card-footer"><span class="card-date">2024-07</span><div class="card-arrow">→</div></div>
+    </div>
+
+    <div class="article-card" data-tags="Gen AI,Private Banking,Wealth Management" data-id="ai2" onclick="openArticle('ai2')">
+      <div class="card-tags"><span class="tag tag-gen-ai">Gen AI</span><span class="tag tag-wealth">財富管理</span><span class="tag tag-private">私人銀行</span></div>
+      <div class="card-series"># AI ✕ 私銀財管系列 — 02</div>
+      <div class="card-title">AI 可為私銀與財管業務的哪些面向帶來效益？</div>
+      <div class="card-footer"><span class="card-date">2024-07</span><div class="card-arrow">→</div></div>
+    </div>
+
+    <div class="article-card" data-tags="Gen AI,Private Banking,Wealth Management" data-id="ai3" onclick="openArticle('ai3')">
+      <div class="card-tags"><span class="tag tag-gen-ai">Gen AI</span><span class="tag tag-wealth">財富管理</span><span class="tag tag-private">私人銀行</span></div>
+      <div class="card-series"># AI ✕ 私銀財管系列 — 03</div>
+      <div class="card-title">如何利用 Gen AI 來提高收益？以客戶洞察為例</div>
+      <div class="card-footer"><span class="card-date">2024-08</span><div class="card-arrow">→</div></div>
+    </div>
+
+    <div class="no-results" id="noResults">目前沒有此主題的文章</div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-eyebrow">About</div>
+  <h2 class="section-title">關於大衛哥</h2>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>您好，我是 <strong>David（大衛哥）</strong>，現任星普思 Synpulse Taiwan 的<strong>副合夥人</strong>。星普思為發跡於瑞士且專精於金融業逾 25 年的外商管理顧問公司，透過提供管理顧問服務並運用領先的科技與數位技術協助客戶解決問題或達成營運目標。</p>
+      <p>我長期深耕<strong>數位轉型、AI 治理、數據治理</strong>與<strong>永續發展 ESG</strong> 等議題，以 MBB 等級的顧問思維，將複雜的企業挑戰轉化為清晰可執行的解決方案。</p>
+      <p>「大衛哥小顧問」是我分享觀點與洞察的空間。若您面臨數位轉型、AI轉型、風險管理與永續發展 ESG 等相關議題，<strong>歡迎洽詢合作</strong>。</p>
+    </div>
+    <div class="expertise-list">
+      <div class="expertise-item"><div class="expertise-icon">📊</div><div><div class="expertise-name">數據治理 Data Governance</div><div class="expertise-desc">從策略到落地，協助企業建立完善的數據治理框架與黃金規則</div></div></div>
+      <div class="expertise-item"><div class="expertise-icon">🤖</div><div><div class="expertise-name">生成式 AI / AI 治理</div><div class="expertise-desc">評估與部署 Gen AI 方案，並建立企業 AI 使用規範與治理機制</div></div></div>
+      <div class="expertise-item"><div class="expertise-icon">⚡</div><div><div class="expertise-name">數位轉型</div><div class="expertise-desc">以金融業實戰經驗，主導端對端數位轉型策略與執行</div></div></div>
+      <div class="expertise-item"><div class="expertise-icon">🏛</div><div><div class="expertise-name">私人銀行 & 財富管理</div><div class="expertise-desc">AI 賦能私銀業務，提升客戶洞察、服務品質與收益表現</div></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+<footer>
+  <div class="footer-brand">大衛哥小顧問</div>
+  <div class="footer-links">
+    <a onclick="smoothNav('#insights')">觀點文章</a>
+    <a onclick="smoothNav('#about')">關於大衛哥</a>
+  </div>
+  <div class="footer-credit">© 2025 David C. · Synpulse Taiwan</div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal" id="modalContent">
+    <div class="modal-header">
+      <div class="modal-series" id="modalSeries"></div>
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-meta">
+        <div class="modal-date" id="modalDate"></div>
+        <div class="card-tags" id="modalTags"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer">
+      <a class="modal-linkedin" id="modalLinkedin" href="#" target="_blank" style="display:none">🔗 在 LinkedIn 上查看原文</a>
+      <span></span>
+      <button class="hero-cta" style="padding:10px 20px;font-size:.82rem;" onclick="closeModal()">← 返回文章列表</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── ARTICLES DATA ───
+const articles = {
+  dg1: {
+    series: '數據治理系列 #01',
+    title: 'Gen AI 如何提昇金融業的數據治理？',
+    date: '2024-07',
+    tags: ['數據治理','Gen AI'],
+    linkedin: 'https://www.linkedin.com/posts/davidchungtw_jfchavndvioz-nrdjgjkppkzk-oxconmlkhkzk-activity-7222143983185973249-qvrn',
+    body: `
+      <p>長期以來數據治理對金融機構來說重要性不言可喻，但往往投入數據治理資源的優先序相對並不高。然而近幾年隨著資料科學、AI乃至於生成式AI（Gen AI）的興起，數據治理的重要性不斷因為技術的演進而進一步「被迫地」突顯出來。</p>
+      <p>在本系列文章將以<strong>數據治理 Data Governance</strong> 為核心進行不同面向的介紹與探討。本篇文章將探討 Gen AI 如何提昇金融業的數據治理。</p>
+      <div class="highlight-box">依據我們過去豐富的數據治理專案經驗，在八大數據治理的支柱中最普遍的問題不外乎<strong>數據品質、數血緣與數據字典</strong>這三個彼此之間也有高度相關性的議題。</div>
+      <p>如今 Gen AI 不僅能提升數據的質量和一致性，還能通過自動化的數據質量檢查和清理流程，確保數據的準確性和可靠性；它還提高了數據管理框架內的透明度和問責度（Accountability），使金融機構能夠更有效地追踪和管理數據來源，從而支持更加精確的決策和業務增長。</p>
+      <h3>以下是 Gen AI 可以提昇數據治理的三個基本面向：</h3>
+      <div class="numbered-item"><div class="num-badge">1</div><div><strong>元數據的建立與補強</strong><br>依據我們的經驗，元數據（Metadata）的缺乏與不夠精確幾乎是造成資料品質不足最普遍的原因，而填寫過程繁瑣常需大量的人工且無一致性的填寫標準是最大的障礙；Gen AI 恰恰可提供協助。舉例而言，本土銀行在系統建置的過程中均有撰寫「商業分析文件（BA 文件）」以及「系統分析文件（SA 文件）」；而這兩份文件多半可提供相當程度的元數據的資訊基礎。透過 Gen AI 自動讀取該些文件而快速生成元數據，已可提高使用者對於資料的可理解性而減少誤用或錯用。</div></div>
+      <div class="numbered-item"><div class="num-badge">2</div><div><strong>數據品質的監測、比對與清理</strong><br>於系統運作時及時檢測數據中的異常、錯誤和不一致性是在日常運作中提昇數據治理的務實做法；我們可以透過 Gen AI 掃描大量數據集識別出缺失值、格式錯誤和數據異常，並及時告警並進行後續的處理。此外依據我們的經驗，常見存在於不同的資料表單但具有相同的資料名稱的數據彼此之間並不一致，透過 Gen AI 並給予適當的指令可協助數據治理團隊成員辨識原因。</div></div>
+      <div class="numbered-item"><div class="num-badge">3</div><div><strong>建立數據的知識圖譜</strong><br>知識圖譜的範圍可能很廣泛，但光就數據血緣（Lineage）的不足就是常見的痛點。利用 Gen AI 透過組織內各種可能包含數據血緣的文件、檔案、系統設定檔甚至是程式碼自動提取數據與數據之間的關聯構建出知識圖譜的基礎，亦為 Gen AI 可提昇數據治理的場景之一。</div></div>
+      <p>以上針對 Gen AI 可以提昇數據治理的幾個基本面向進行說明，如果您針對數據治理有更多更深入的需求，歡迎與我們聯繫。我們在台灣、香港、新加坡有著豐富協助金融業處理數據治理的經驗。</p>
+    `
+  },
+  dg2: {
+    series: '數據治理系列 #02',
+    title: '數據治理常見的迷思',
+    date: '2024-07',
+    tags: ['數據治理','Gen AI'],
+    linkedin: 'https://www.linkedin.com/posts/davidchungtw_jfchavndvioz-nrdjgjkppkzk-oxconmlkhkzk-activity-7223719797534978048-kC8g',
+    body: `
+      <p>長期以來數據治理對金融機構來說重要性不言可喻，但往往投入數據治理資源的優先序相對並不高。然而近幾年隨著資料科學、AI乃至於生成式AI（Gen AI）的興起，數據治理的重要性不斷因為技術的演進而進一步「被迫地」突顯出來。</p>
+      <p>本篇文章將介紹：<strong>數據治理常見的迷思。</strong></p>
+      <p>我們曾與多個金融領域的客戶進行有關數據治理的訪談，在訪談中我們常常向客戶詢問他們所理解的數據治理為何、如何進行，以及該由誰負責等與日常業務中高度相關的問題。然而從我們所蒐集的回復中常常發現值得進一步研議的問題甚至是迷思。</p>
+      <h3>以下是我們從最常見的迷思中所挑出的三項：</h3>
+      <div class="numbered-item"><div class="num-badge">1</div><div><strong>採購資料倉儲軟體就可順利完成數據治理</strong><br>在我們實際訪談金融業的經驗中，不時聽到一個問題：「明明已經採購了資料倉儲軟體與相關系統，數據仍然有很多問題」。顯然有相當多的組織仍存在著要解決數據治理就是先採購系統的觀念，以及採用了系統就像吃了萬靈丹一樣可以高枕無憂。</div></div>
+      <div class="numbered-item"><div class="num-badge">2</div><div><strong>數據治理是 IT 的事，與業務 & 其他單位無關</strong><br>由於絕大多數的數據都是儲存於資料庫中，而資料庫系統大多由 IT 單位管理或作為負責單位或 Owner；所以數據治理當然就是 IT 單位應該要負責的事情。這是許多組織常見的迷思，但數據治理實際上需要業務單位的深度參與。</div></div>
+      <div class="numbered-item"><div class="num-badge">3</div><div><strong>數據治理僅為短期的專案，不需持續執行</strong><br>在眾多訪談的經驗中，我們常被問到數據治理是否能在某一段期間內「完成」？顯見企業並沒有將數據治理如同風險管理一樣看待；數據治理其實是一項需要長期運作的事項。</div></div>
+      <div class="highlight-box">以上三項是我們在過去的專案與訪談中相當普遍的迷思，也多半是導致客戶在執行數據治理時產生障礙的主因；我們會在後續的文章中進一步解釋並調整這些迷思。</div>
+    `
+  },
+  dg3: {
+    series: '數據治理系列 #03',
+    title: '數據治理常見的痛點',
+    date: '2024-08',
+    tags: ['數據治理','Gen AI'],
+    linkedin: 'https://www.linkedin.com/posts/davidchungtw_jfchavndvioz-nrdjgjkppkzk-oxconmlkhkzk-activity-7226870561858011137-fI_w',
+    body: `
+      <p>長期以來數據治理對金融機構來說重要性不言可喻，但往往投入數據治理資源的優先序相對並不高。然而近幾年隨著資料科學、AI乃至於生成式AI（Gen AI）的興起，數據治理的重要性不斷因為技術的演進而進一步「被迫地」突顯出來。</p>
+      <p>本篇文章將介紹：<strong>數據治理常見的痛點。</strong></p>
+      <p>我們曾與多個金融領域的客戶進行有關數據治理的訪談，在訪談中我們最重要的問題即為常遇到的痛點有哪些？以下是我們整理出最常見的三項痛點。</p>
+      <h3>三大常見痛點</h3>
+      <div class="numbered-item"><div class="num-badge">1</div><div><strong>數據品質不佳</strong><br>數據品質不佳幾乎是一個大家共通的問題，至少我們鮮少聽到有客戶認為自己的品質是足夠良好的。而數據品質不佳的狀況也有很多種，形成的原因也有多種可能性。一般而言不外乎：數據的數值或資訊不正確或不夠精確，以及在數據進行整併的時候（多半在系統整合時發生）發現理應是相同的數據但卻有不同的數值…等。然而更令人氣餒的是，當要進行問題的追查時，卻發現數據的上下游關係，亦即俗稱的「血緣」並不完整而導致追查不易。</div></div>
+      <div class="numbered-item"><div class="num-badge">2</div><div><strong>數據治理的權責不明</strong><br>在我們的經驗中，設有數據治理團隊的組織已相對不常見，有明確的角色與責任（R&R）的組織更是少之又少。而在權責定義不清楚的情況下，人員在執行相關的任務時即會產生困擾，導致執行的優先順序錯亂進而使得整體數據治理的成效不彰。更明白地說，若是無明確的績效定義，組織要推動數據治理將是難上加難。</div></div>
+      <div class="numbered-item"><div class="num-badge">3</div><div><strong>無法評估未來應導入的系統工具</strong><br>一般而言組織已經為了業務應用所產生的數據已經採購了相當數量的系統工具；即便如此我們仍然常常聽到客戶抱怨所採購的工具並不適用或是無法滿足需求，然而更糟糕的是，後續應該進一步導入的系統工具為何，以及優先順序甚至無法評估。</div></div>
+      <p>以上是我們最常於金融機構聽到的數據治理的痛點，後續我們會再持續討論相關痛點的發生原因，以及可行的解決方案。</p>
+    `
+  },
+  dg4: {
+    series: '數據治理系列 #04',
+    title: '資料策略',
+    date: '2025-01',
+    tags: ['數據治理','數位轉型'],
+    linkedin: 'https://www.linkedin.com/posts/davidchungtw_數據治理-4-資料策略-data-governance-4-activity-7272127063069745154-ngEF',
+    body: `
+      <p>長期以來數據治理對金融機構來說重要性不言可喻，但往往投入數據治理資源的優先序相對並不高。然而近幾年隨著資料科學、AI乃至於生成式AI（Gen AI）的興起，數據治理的重要性不斷因為技術的演進而進一步「被迫地」突顯出來。</p>
+      <p>本篇文章將介紹：<strong>數據治理中的資料策略。</strong></p>
+      <div class="highlight-box">資料策略不僅僅是一份處理資料的發展藍圖，且是一個組織面對資料時的願景，並且將資料管理的實務與您的業務目標對標。沒有資料策略，資料治理可能會淪為僵化的合規活動，與組織目標脫節導致看不出實際的成效。</div>
+      <h3>定義資料策略為何對於數據治理如此重要？</h3>
+      <div class="numbered-item"><div class="num-badge">1</div><div><strong>才能有明確的目標</strong><br>數據治理常見的議題之一是不知為何而戰，透過定義明確的資料策略的過程，組織內部將取得一致的戰略性目標。</div></div>
+      <div class="numbered-item"><div class="num-badge">2</div><div><strong>才知道執行哪些決策</strong><br>有了目標之後，即能進一步依據目標而產生出行動方案；而在行動方案執行的過程中亦將明確知悉資料將被用於進行哪些決策。</div></div>
+      <div class="numbered-item"><div class="num-badge">3</div><div><strong>才能有效運用資源</strong><br>在組織的人力、時間、預算有限的情況下，有了資料策略即能正確地判斷資源應當投入於哪些層面而減少衝突、重工與浪費。</div></div>
+      <p>總的來說，數據治理往往讓人垢病的議題之一即為投入了大量的資源卻不見明確的成果；缺乏明確的資料策略可能是主因。有了資料策略，能協助您的數據治理的成效更為有感，更能讓數據為您的組織帶來更大的價值。</p>
+    `
+  },
+  dg5: {
+    series: '數據治理系列 #05',
+    title: '黃金規則',
+    date: '2025-01',
+    tags: ['數據治理'],
+    linkedin: 'https://www.linkedin.com/posts/davidchungtw_數據治理-5-黃金規則-data-governance-5-golden-activity-7286727883677483008-dxYP',
+    body: `
+      <p>長期以來數據治理對金融機構來說重要性不言可喻，但往往投入數據治理資源的優先序相對並不高。本篇文章將介紹：<strong>數據治理中的黃金規則。</strong></p>
+      <div class="highlight-box">數據治理中的黃金規則，最重要的角色就是確保數據品質符合要求，對於提升組織的運營效率、降低合規風險以及構建組織對於數據的信任基礎非常重要。</div>
+      <h3>常見的幾種黃金規則：</h3>
+      <div class="numbered-item"><div class="num-badge">1</div><div><strong>標準化規則</strong>：確認數據滿足事先定義好的數據標準</div></div>
+      <div class="numbered-item"><div class="num-badge">2</div><div><strong>驗證規則</strong>：驗證數據的值域、格式或型態符合需求；例如年齡不能為負值</div></div>
+      <div class="numbered-item"><div class="num-badge">3</div><div><strong>去重複規則</strong>：決定多筆相似的數據該如何合併</div></div>
+      <div class="numbered-item"><div class="num-badge">4</div><div><strong>補遺規則</strong>：當數據發生缺漏時進行補遺時的規則</div></div>
+      <div class="numbered-item"><div class="num-badge">5</div><div><strong>一致性與參考完整性規則</strong>：確定數據符合業務邏輯性；例如合約終止日期不得早於開始日期</div></div>
+      <div class="numbered-item"><div class="num-badge">6</div><div><strong>優先權規則</strong>：數據發生不一致時，需決定優先使用哪一項數據</div></div>
+      <p>除了上述常見的6項規則之外，實務中仍尚有其他黃金規則。一般而言，組織將視實際數據所發生的狀況依據數據的重要性或優先序逐一進行黃金規則的討論。此外，黃金規則的設計亦與業務作業習慣有關，未來落地時也可能需要調整作業流程。</p>
+      <p>總的來說，黃金規則最後能夠完整落地，除了規則本身之外尚有「系統」與「作業流程」需要一併配合。</p>
+    `
+  },
+  dg6: {
+    series: '數據治理系列 #06',
+    title: '數據治理如何落地？',
+    date: '2025-03',
+    tags: ['數據治理','數位轉型'],
+    linkedin: '',
+    body: `
+      <p>近期接到多個客戶以及合作夥伴的提問，關於數據治理總是無法落地的問題。在本篇文章中將重點式地介紹我們的經驗與觀察，並且提供發想的方向供參考。</p>
+      <div class="highlight-box"><strong>Data Governance 為何無法落地？——從框架到真正產生價值</strong><br>在當今企業數位化轉型的浪潮中，Data Governance（數據治理）成為了許多企業的關鍵策略之一。然而，許多企業投入大量資源，導入了各類框架、標準與系統，卻仍然難以真正落地，無法在業務中創造實際價值。這種「有框架、無應用」的現象，究竟是什麼原因造成的？</div>
+      <h3>常見的「未落地」情境</h3>
+      <div class="numbered-item"><div class="num-badge">1</div><div><strong>導入了框架，卻難以套用</strong>：許多企業從顧問或業界標準中導入了 Data Governance 框架，但這些框架可能過於理論化，與企業的實際業務場景脫節，導致難以真正應用。</div></div>
+      <div class="numbered-item"><div class="num-badge">2</div><div><strong>建立了數據標準，卻未被依循</strong>：許多企業雖然設立了數據標準，但卻沒有相應的機制來確保這些標準被遵循。例如，數據格式標準雖然制定了，但不同部門仍各自為政，導致數據品質依舊參差不齊。</div></div>
+      <div class="numbered-item"><div class="num-badge">3</div><div><strong>採購了大型系統，但無法滿足需求</strong>：許多企業認為購買一個強大的數據管理系統，就能解決數據治理問題。然而，若缺乏清晰的需求分析與內部使用者的參與，這些系統最終可能無法真正解決業務痛點。</div></div>
+      <div class="numbered-item"><div class="num-badge">4</div><div><strong>建立了管理流程，但仍存在漏洞</strong>：一些企業花費大量時間建立數據治理的管理流程，但缺乏強制執行與監督機制，導致實際執行時依然出現數據錯誤、流程不透明等問題。</div></div>
+      <h3>為什麼 Data Governance 會難以落地？</h3>
+      <p>🔍 <strong>1. 顧問提供的框架是否千篇一律？</strong><br>許多企業依賴顧問公司提供的標準化框架，但這些框架往往是通用模板，缺乏針對企業自身業務模式與數據需求的客製化調整。</p>
+      <p>🔍 <strong>2. 理想規劃與實際執行的落差是否被考量？</strong><br>許多數據治理計畫在規劃階段看似完美，但在落地執行時，卻因組織文化、技術限制或人員意識等因素，導致無法真正推動。</p>
+      <p>🔍 <strong>3. 技術主導 vs. 業務主導：誰應該負責？</strong><br>很多數據治理專案由 IT 部門主導，但 IT 與業務部門的目標往往不同。若企業未能在技術與業務之間找到平衡，數據治理便難以真正產生價值。</p>
+      <div class="highlight-box">說到底，數據治理在「治什麼」？和「理什麼」？您的組織是否真的瞭解並且「在同一頁上（On the same page）」？<br><br>換句話說，企業應該先釐清自己希望解決的數據痛點，才能制定合適的治理策略，而不是盲目導入框架與系統。</div>
+      <h3>如何真正讓 Data Governance 落地？</h3>
+      <p>在推動數據治理落地之前，企業應該先自問以下幾個問題：</p>
+      <p>💡 <strong>1. 我們缺少的是方法論與框架嗎？</strong><br>若企業對數據治理的概念仍不清晰，可以先引入合適的方法論與框架，但更重要的是確保這些框架能與企業的業務需求相結合，而非僅僅參考業界標準。</p>
+      <p>💡 <strong>2. 我們缺少的是一個強而有力的知名系統嗎？</strong><br>一個好的數據治理系統確實能夠提升管理效率，但它不應該是解決問題的唯一手段。企業應該先確保數據治理的規則與流程被明確定義，再選擇合適的技術工具來支撐這些規則。</p>
+      <p>💡 <strong>3. 我們缺少的是各式各樣的流程嗎？</strong><br>有些企業認為建立了完整的流程就能解決數據治理問題，但若缺乏有效的執行與監督，這些流程可能只是紙上談兵。</p>
+      <div class="highlight-box" style="background:rgba(201,168,76,.08);border-color:rgba(201,168,76,.2);border-left-color:var(--gold);">「落地」才能「產生價值」；精美的投影片與華麗的系統沒有辦法。</div>
+    `
+  },
+  dg7: {
+    series: '數據治理系列 #07',
+    title: '從 CDO，到 CAO，再到 "CDAIO"，會不會又是一種「頭銜通膨」？',
+    date: '2026-01',
+    tags: ['數據治理','數位轉型'],
+    linkedin: '',
+    body: `
+      <p>近期 HBR 發表了一篇文章《Why Your Company Needs a Chief Data, Analytics, and AI Officer》，探討了 CDAIO 這個頭銜。</p>
+      <p>這些年來，組織內關於資料主管（Data leader）這個角色 C-Suite 的頭銜不斷演進：從 CDO（Chief Data Officer）、CDAO（Chief Data and Analytics Officer），演變至今日的 CDAIO（Chief Data, Analytics, and AI Officer）。</p>
+      <p>坦白說，客戶面對這樣的 C-Suite 頭銜議題時總是半信半疑。許多人一定在想，「這該不會只是一種頭銜通膨（Title Inflation）？」但是，我也常會問客戶的問題是：「<strong>如果 AI 無法發揮價值，現在誰會被挑戰/問責？</strong>」</p>
+      <p>當我們與客戶討論這樣的議題時，最終都還是會回歸到很務實的核心議題：這個角色的責任到底是什麼？以我的觀察，這是金融業在數位浪潮下，這三個頭銜的演化代表了金融業看待資料的三種截然不同之戰略思維轉變。</p>
+      <h3>三個時期的演化：</h3>
+      <div class="highlight-box"><strong>1️⃣ CDO 時期：奠基與防守</strong><br>🟥 主要痛點：我們有海量數據，但沒人敢用，因為沒人知道哪個數字是對的。<br>🟪 核心任務：建立「單一真理版本（Single Source of Truth）」。<br>🟦 關鍵挑戰：這是一個辛苦的基礎工程——確保資料品質、滿足監管合規（Compliance）、打破部門穀倉（Silos）。這時期的數據被視為一種「資產」，需要被嚴格保護與盤點。</div>
+      <div class="highlight-box"><strong>2️⃣ CDAO 時期：從成本中心轉向價值中心</strong><br>🟥 主要痛點：數據整理好了，但董事會開始問：「我們花了幾千萬建 Data Lake，買了 Data Warehouse，ROI 在哪裡？」<br>🟪 核心任務：數據民主化與商業變現。<br>🟦 關鍵挑戰：不再只是「儲存資料」，而是「分析」。如何讓數據走出 IT 部門，賦能前線業務（Data Democratization），並透過進階分析（Advanced Analytics）主動出擊，從防守轉向進攻得分。</div>
+      <div class="highlight-box"><strong>3️⃣ CDAIO 時期：AI 的規模化與融合</strong><br>🟥 主要痛點：每個人都在談 GenAI，POC 跟沙盒做了一堆，但真正能落地進入核心業務場景的有多少呢？<br>🟪 核心任務：駕馭「三位一體」的複雜性——Data 是燃料，Analytics 是引擎，AI 是領航。<br>🟦 關鍵挑戰：AI 治理與風險、從實驗室走到營運各方面的鴻溝、「三位一體」下的組織架構與責任調整是否有對應的調整？</div>
+      <div class="highlight-box" style="background:rgba(201,168,76,.08);border-color:rgba(201,168,76,.2);border-left-color:var(--gold);">總結來說，如果今天董事會提問：『資料與 AI 到底替我們賺了多少錢、降了多少風險？』，在場的每個人是否有相同的答案呢？</div>
+    `
+  },
+  ai1: {
+    series: 'AI ✕ 私銀財管系列 #01',
+    title: '對於私銀財管而言，Gen AI 意味著什麼？',
+    date: '2024-07-21',
+    tags: ['Gen AI','私人銀行','財富管理'],
+    linkedin: '',
+    body: `
+      <p>在本系列文章中，我們將深入探討人工智慧（AI）如何變革私銀與財管業務。</p>
+      <p>人工智慧（AI）正在快速變革金融業，從提升客戶體驗到優化內部運作，AI 的應用無所不在，對於金融業而言，AI 的整合正在重新定義金融服務的標準。本篇短文將聚焦各金融機構如何辨別出「最佳的」生成式AI於其在私銀與財管業務上的應用。</p>
+      <h3>潛在的業務應用盤點與辨識</h3>
+      <p>我們可以從四大面向初步進行盤點：</p>
+      <div class="numbered-item"><div class="num-badge">1</div><div><strong>行銷與銷售</strong></div></div>
+      <div class="numbered-item"><div class="num-badge">2</div><div><strong>客戶服務</strong></div></div>
+      <div class="numbered-item"><div class="num-badge">3</div><div><strong>投資諮詢與客戶關係管理</strong></div></div>
+      <div class="numbered-item"><div class="num-badge">4</div><div><strong>內部應用</strong></div></div>
+      <h3>決定應用的優先序</h3>
+      <p>我們使用了「業務影響 × 所需資源」矩陣，定義出了四個象限，並將前一個步驟中所盤點出來的應用進行討論，並定位在四個象限中。隨後，挑選「高業務影響與需要較少的資源」的象限（即左上角）中的應用，初步得到以下五大高優先序的應用：</p>
+      <div class="numbered-item"><div class="num-badge">1</div><div><strong>智能客戶洞察分析</strong>：生成式 AI 通過分析社交媒體、過去互動等外部數據，提供趨勢、情感和新興需求的洞察，幫助金融機構更準確地了解客戶。</div></div>
+      <div class="numbered-item"><div class="num-badge">2</div><div><strong>客戶相關報告內容產生</strong>：生成式 AI 可以自動收集和綜合多來源數據，生成週報、月報等客戶報告，大大減少人工參與時間。</div></div>
+      <div class="numbered-item"><div class="num-badge">3</div><div><strong>虛擬客戶關係經理（Virtual RM）</strong>：生成式 AI 支援 RM 進行客戶互動，如記錄會議筆記、安排後續行動和提供參與建議，提高效率和服務質量。</div></div>
+      <div class="numbered-item"><div class="num-badge">4</div><div><strong>市場分析報告</strong>：生成式 AI 通過處理和分析大量市場數據，生成即時的市場洞察和分析報告，幫助投資決策。</div></div>
+      <div class="numbered-item"><div class="num-badge">5</div><div><strong>投資組合模擬</strong>：生成式 AI 利用實時市場數據和研究，模擬各種投資策略及其潛在結果，幫助投資者做出更明智的決策。</div></div>
+      <div class="highlight-box">金融機構在導入 AI 與 Gen AI 的過程中，即可以透過上述的方法定位出可優先發展的應用，作為組織內部「AI 發展策略藍圖」的其中一個關鍵步驟。</div>
+    `
+  },
+  ai2: {
+    series: 'AI ✕ 私銀財管系列 #02',
+    title: 'AI 可為私銀與財管業務的哪些面向帶來效益？',
+    date: '2024-07-22',
+    tags: ['Gen AI','私人銀行','財富管理'],
+    linkedin: '',
+    body: `
+      <p>在本系列文章中，我們將深入探討人工智慧（AI）如何變革私銀與財管業務。而本篇文章將聚焦：到底 AI 技術可為私銀與財管業務的哪些面向帶來效益？</p>
+      <p>根據我們的觀察，對於財富管理業務來說，至少可以從四個面向帶來效益：</p>
+      <div class="numbered-item"><div class="num-badge">1</div><div><strong>提高收益</strong><br>例如利用 AI 分析與客戶聯繫的內容，進一步更細微地瞭解客戶的需求狀態以提供個人化的服務以吸引客戶。</div></div>
+      <div class="numbered-item"><div class="num-badge">2</div><div><strong>提昇競爭力</strong><br>例如利用 AI 技術來針對不同客戶產出個人化的投資建議，協助客戶差異化，也提昇了金融機構自己與同業的差異化。</div></div>
+      <div class="numbered-item"><div class="num-badge">3</div><div><strong>提升生產力</strong><br>例如將金融市場相關資訊透過 AI 進行更完整且快速的整合分析，更有效率地提供資訊給客戶或研究部門參考。</div></div>
+      <div class="numbered-item"><div class="num-badge">4</div><div><strong>降低錯誤</strong><br>例如透過 AI 技術分析可疑的交易樣態或是不尋常的理專行為進而提早進行防範。</div></div>
+      <p>上面四個面向均已有市場上的同業案例可以參考，我們會再後續的文章中進行介紹。</p>
+    `
+  },
+  ai3: {
+    series: 'AI ✕ 私銀財管系列 #03',
+    title: '如何利用 Gen AI 來提高收益？以客戶洞察為例',
+    date: '2024-08-22',
+    tags: ['Gen AI','私人銀行','財富管理'],
+    linkedin: 'https://www.linkedin.com/posts/davidchungtw_jfchavndvioz-aindvioz-nrdjgjkppkzk-activity-7232040653147320320-u1TH',
+    body: `
+      <p>在本系列文章中，我們將深入探討人工智慧（AI）如何變革私銀與財管業務。本篇文章將聚焦：<strong>如何利用 Gen AI 來提高收益？以客戶洞察為例。</strong></p>
+      <p>根據我們的觀察，財富管理業務中需要進行客戶資料的分析並進一步瞭解客戶，即獲得客戶洞察時，仍需仰賴大量的人工作業以及可能涉及多個部門與團隊的協作，導致需要花費大量的時間、較易發生作業上的錯誤以及不易掌握複雜的資料型態…等痛點發生。</p>
+      <h3>使用生成式 AI 技術，可於如下四個面向獲得效益的提昇：</h3>
+      <div class="numbered-item"><div class="num-badge">1</div><div><strong>更精準聚焦及個人化</strong><br>透過生成式 AI 來分析顧客的資料，金融業不僅能更深入了解其目標客群的需求與偏好並依此來提供個人化的行銷資訊與服務。這不僅可提高顧客滿意度更可以提昇品牌忠誠度。</div></div>
+      <div class="numbered-item"><div class="num-badge">2</div><div><strong>更積極主動的客戶接洽</strong><br>金融業利用 Gen AI 可分析客戶的數據與分析可更快速了解客戶的需求及行為模式，從而制定可積極的接洽策略與行動。再者可利用多種聯繫管道，例如社交媒體、電子郵件及即時通訊平台主動與客戶保持聯繫，定期提供有價值的資訊和更新，增強客戶的參與感與聯繫感。</div></div>
+      <div class="numbered-item"><div class="num-badge">3</div><div><strong>更快速的數據驅動決策</strong><br>由於客戶的狀態以及市場變化均非常快速，Gen AI 可以即時進行分析並快速獲得洞見，金融機構即可依據所獲得之洞見來進行決策；更重要的是這些決策是由數據所驅動的。</div></div>
+      <div class="numbered-item"><div class="num-badge">4</div><div><strong>更有效的資源配置優化</strong><br>利用 Gen AI 來快速分析客戶的資料來獲得客戶洞見，對於後續的行銷與推廣的資源上即可進一步優化，更精準地打中客戶的需求，避免資源的浪費。</div></div>
+    `
+  }
+};
+
+// ─── TAG LABEL MAP ───
+const tagLabel = {
+  '數據治理': '<span class="tag tag-data">數據治理</span>',
+  'Gen AI': '<span class="tag tag-gen-ai">Gen AI</span>',
+  '數位轉型': '<span class="tag tag-digital">數位轉型</span>',
+  '財富管理': '<span class="tag tag-wealth">財富管理</span>',
+  '私人銀行': '<span class="tag tag-private">私人銀行</span>'
+};
+
+function openArticle(id) {
+  const a = articles[id];
+  if (!a) return;
+  document.getElementById('modalSeries').textContent = a.series;
+  document.getElementById('modalTitle').textContent = a.title;
+  document.getElementById('modalDate').textContent = a.date;
+  document.getElementById('modalTags').innerHTML = a.tags.map(t => tagLabel[t] || `<span class="tag tag-gen-ai">${t}</span>`).join('');
+  document.getElementById('modalBody').innerHTML = a.body;
+  const li = document.getElementById('modalLinkedin');
+  if (a.linkedin) { li.href = a.linkedin; li.style.display = 'inline-flex'; } 
+  else { li.style.display = 'none'; }
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  // scroll modal to top
+  document.getElementById('modalOverlay').scrollTop = 0;
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+function filterArticles(tag, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const cards = document.querySelectorAll('.article-card');
+  let count = 0;
+  cards.forEach(card => {
+    if (tag === 'all' || (card.dataset.tags || '').includes(tag)) {
+      card.classList.remove('hidden'); count++;
+    } else { card.classList.add('hidden'); }
+  });
+  document.getElementById('noResults').style.display = count === 0 ? 'block' : 'none';
+}
+
+function smoothNav(target) {
+  const el = document.querySelector(target);
+  if (el) { window.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' }); }
+}
+
+function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+</script>
+</body>
+</html>
